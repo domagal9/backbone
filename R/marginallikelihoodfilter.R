@@ -18,6 +18,7 @@
 #' @export
 #'
 #' @examples
+#' mlf(davis%*%t(davis))
 mlf <- function(G){
   ### Run Time ###
   run.time.start <- Sys.time()
@@ -29,6 +30,7 @@ mlf <- function(G){
 
   if (convert$summary[[3]] == TRUE){undirected <- TRUE}
   else{undirected <- FALSE}
+  print(undirected)
   if (convert$summary[[4]]==FALSE){stop("Graph must be weighted.")}
   if (convert$summary[[2]]==TRUE){warning("This object is being treated as a unipartite network.")}
 
@@ -36,17 +38,16 @@ mlf <- function(G){
   cs <- colSums(G)
 
   #### Compute Probabilities ####
-  if (undirected){
-    t <- sum(G)/2
-    p = outer(rs,rs)/(2*t**2)
-    Negative = stats::pbinom(G, t, p, lower.tail = TRUE)
-    Positive = stats::pbinom(G-1,t,p, lower.tail = FALSE)
-  }
-  else if (!undirected){
+  if (undirected == TRUE){
+    t <- sum(G*upper.tri(G))+sum(diag(G))
+    p <- outer(rs,rs)/(2*t**2)
+    Negative <- stats::pbinom(G, t, p, lower.tail = TRUE)
+    Positive <- stats::pbinom(G-1,t,p, lower.tail = FALSE)
+  } else {
     t <- sum(G)
-    p = outer(rs,cs)/(t**2)
-    Negative = stats::pbinom(G, t, p, lower.tail = TRUE)
-    Positive = stats::pbinom(G-1,t,p, lower.tail = FALSE)
+    p <- outer(rs,cs)/(t**2)
+    Negative <- stats::pbinom(G, t, p, lower.tail = TRUE)
+    Positive <- stats::pbinom(G-1,t,p, lower.tail = FALSE)
   }
 
   ### Add back in rownames ###
@@ -63,7 +64,7 @@ mlf <- function(G){
   r <- rs
   c <- cs
   a <- c("Model", "Input Class", "Bipartite", "Symmetric", "Weighted", "Number of Rows", "Number of Columns", "Running Time (secs)")
-  b <- c("Stochastic Degree Sequence Model", convert$summary$class, convert$summary$bipartite, convert$summary$symmetric, convert$summary$weighted, dim(B)[1], dim(B)[2], as.numeric(total.time))
+  b <- c("Stochastic Degree Sequence Model", convert$summary$class, convert$summary$bipartite, convert$summary$symmetric, convert$summary$weighted, dim(G)[1], dim(G)[2], as.numeric(total.time))
   model.summary <- data.frame(a,b, row.names = 1)
   colnames(model.summary)<-"Model Summary"
 
