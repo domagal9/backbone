@@ -97,8 +97,7 @@ backbone.extract <- function(backbone, signed = FALSE, alpha = 0.05, fwer = "non
   sign[sign==0] <- 1
   backbone <- backbone*sign  #apply appropriate sign to significant edges
   if(signed==FALSE) {backbone[backbone==-1] <- 0}  #if binary backbone requested, change -1s to 0s
-  if (model=="Fixed Fill Model" | model=="Fixed Row Model" | model=="Fixed Column Model" |                     #For bipartite backbones,
-      model=="Stochastic Degree Sequence Model" | model=="Fixed Degree Sequence Model") {diag(backbone) <- 0}  #fill diagonal with 0s
+  diag(backbone) <- 0  #fill diagonal with 0s
 
   #### Display suggested manuscript text ####
   if (narrative == TRUE) {
