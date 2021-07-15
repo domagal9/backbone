@@ -55,6 +55,7 @@ disparityfilter <- function(G){
   ### If edge weight was zero, set to 1 in positive so edge not in backbone ###
   positive[zeros] <- 1
 
+
   ### Run Time ###
   run.time.end <- Sys.time()
   total.time = (round(difftime(run.time.end, run.time.start, units = "secs"), 2))
@@ -69,7 +70,7 @@ disparityfilter <- function(G){
   colnames(model.summary)<-"Model Summary"
 
   #### Return Backbone Object ####
-  bb <- list(positive = positive, summary = model.summary)
+  bb <- list(positive = positive, negative = negative, summary = model.summary)
   class(bb) <- "backbone"
   return(bb)
 }
