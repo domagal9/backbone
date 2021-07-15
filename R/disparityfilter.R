@@ -37,7 +37,8 @@ disparityfilter <- function(G){
   if (symmetric == TRUE){
     P <- G/strength
     pvalues <- (1-P)^(degree-1)
-    positive <- as.matrix(pvalues)
+    positive <- as.matrix(pvalues)          #Asymmetric p-values, one from the perspective of each node
+    positive <- pmin(positive,t(positive))  #From Serrano: "satisfy the above criterion for at least one of the two nodes"
     negative <- 1-positive
   }
 
