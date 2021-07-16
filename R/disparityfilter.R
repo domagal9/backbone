@@ -52,9 +52,9 @@ disparityfilter <- function(G){
     negative <- 1-positive
   }
 
-  ### If edge weight was zero, set to 1 in positive so edge not in backbone ###
+  ### If edge weight was zero, set to 1 in positive and negative so edge is not in backbone ###
   positive[zeros] <- 1
-
+  negative[zeros] <- 1
 
   ### Run Time ###
   run.time.end <- Sys.time()
